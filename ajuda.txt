@@ -1,0 +1,3 @@
+g++ main.cpp menu.cpp imagem_login.cpp imagem_cad.cpp dinheiro.h cadastro.h cadastro_fumc.cpp login.cpp -o Bank_Management_System
+
+./Bank_Management_System
