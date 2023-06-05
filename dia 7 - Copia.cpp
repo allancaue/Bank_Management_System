@@ -3,6 +3,30 @@
 #include <stdbool.h>
 #include <locale.h>
 
+    //NOVO SITESMA PARA ARMAZENAR OS CADASTROS
+
+//struct Cadastro {
+   // char nome[30];
+    //char email[30];
+   // char senha[10];
+   // int idade;
+   // int cep;
+   // char cidade[30];
+    //float saldo;
+//} cad;
+
+//struct Dinheiro {
+   // float deposito;
+   // float sacar;
+//} din;
+
+//void salvarCadastro() {
+  //  FILE *arquivo = fopen("cadastro.txt", "w");
+  //  if (arquivo == NULL) {
+     //   printf("Erro ao abrir o arquivo.\n");
+    //    return;
+   // }
+
 struct cadastro {
     char nome[30], email[20], cidade[20], senha[10];
     int cpf, cep, idade;
@@ -51,7 +75,7 @@ void cadastro() {
     scanf("%d", &cad.idade);
 
     if (cad.idade < 18) {
-        printf("Você não tem idade suficiente para se cadastrar.\n");
+        printf("Você nao tem idade suficiente para se cadastrar.\n");
         return;
     }
 
@@ -107,7 +131,7 @@ void dinheiro() {
 
     switch (opcao) {
         case 1:
-            printf("Digite o valor do depósito: ");
+            printf("Digite o valor do deposito: ");
             scanf("%f", &din.deposito);
             din.total += din.deposito;
             printf("Depósito realizado com sucesso.\n");
@@ -136,7 +160,7 @@ void dinheiro() {
             break;
 
         default:
-            printf("Opção inválida.\n");
+            printf("Opcao invailida.\n");
             dinheiro();
             break;
     }
@@ -145,7 +169,7 @@ void dinheiro() {
 bool op() {
     int op;
 
-    printf("Escolha uma opção abaixo\n");
+    printf("Escolha uma opcao abaixo\n");
     printf("1 - Cadastro \n");
     printf("2 - Login\n");
     printf("3 - Sair\n");
@@ -174,7 +198,7 @@ bool op() {
             break;
 
         default:
-            printf("Opção inválida. Digite novamente.\n");
+            printf("Opcao invailida. Digite novamente.\n");
             return true;
             break;
     }
