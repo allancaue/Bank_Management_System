@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void op();
+bool op();
 
 int main()
-{	
-	op();
-		
+{
+	do
+	{
+		system("cls");
+	} while (op() == true);
+
 	return 0;
 }

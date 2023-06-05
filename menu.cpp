@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "cadastro.h"
 
-void login();
-void cadastro();
+void login(const cadastro* cadl);
+void cadastro_fumc(cadastro* cad);
 
-void op()
+bool op()
 {
+	cadastro* cadm = (cadastro*)malloc(sizeof(cadastro));
+
 	int op;
 	bool rep = false;
 
@@ -25,20 +28,28 @@ void op()
 		
 		case 1:
             system("cls");
-            cadastro();
+            cadastro_fumc(cadm);
+            system("cls");
+            return true;
             break;
 			
 		case 2:
 			system("cls");
-			login();
+			login(cadm);
+            system("cls");
+            return true;
             break;
 		
 		case 3:
             printf("Tachau");
+			free(cadm);
+            return false;
             break;
 		
 		default:
-			printf("Opcao errada digite novamente ");
+			printf("Opcao errada digite novamente \n\n");
+			system("pause");
+            return true;
 		    break;
 	}
 	
