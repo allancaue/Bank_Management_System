@@ -15,7 +15,7 @@ struct Cadastro {
 
 struct Dinheiro {
     float deposito;
-    float sacar;
+    float saque;
 } din;
 
 void salvarCadastro() {
@@ -53,19 +53,6 @@ void lerCadastro() {
     fclose(arquivo);
 }
 
-void atualizarSaldo() {
-    FILE *arquivo = fopen("cadastro.txt", "r+");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    }
-
-    fseek(arquivo, sizeof(cad.nome) + sizeof(cad.email) + sizeof(cad.senha) + sizeof(cad.idade) + sizeof(cad.cep) + sizeof(cad.cidade), SEEK_SET);
-    fprintf(arquivo, "%.2f\n", cad.saldo);
-
-    fclose(arquivo);
-}
-
 void cadastro() {
     printf("=== Cadastro ===\n");
     printf("Digite seu nome: ");
@@ -73,6 +60,12 @@ void cadastro() {
 
     printf("Digite seu E-mail: ");
     fgets(cad.email, sizeof(cad.email), stdin);
+
+    // Validar e-mail
+    if (strstr(cad.email, "@gmail.com") == NULL) {
+        printf("E-mail inválido. Deve ser um e-mail do Gmail (@gmail.com).\n");
+        return;
+    }
 
     printf("Digite sua senha (até 10 caracteres): ");
     fgets(cad.senha, sizeof(cad.senha), stdin);
@@ -116,61 +109,112 @@ bool verificarLogin() {
     return false; // Login inválido
 }
 
-void dinheiro() {
-    int opcao;
-
-    printf("Menu\n");
-    printf("1 - Realizar depósito\n");
-    printf("2 - Realizar saque\n");
-    printf("3 - Ver saldo\n");
-    printf("4 - Logout\n");
-    printf("\nOpção: ");
-    scanf("%d", &opcao);
+void realizarDeposito() {
+    printf("Digite o valor do depósito: ");
+    float deposito;
+    scanf("%f", &deposito);
     getchar();
 
-    switch (opcao) {
-        case 1: {
-            printf("Digite o valor do depósito: ");
-            float deposito;
-            scanf("%f", &deposito);
-            getchar();
-            din.deposito = deposito;
-            cad.saldo += din.deposito;
-            printf("Depósito realizado com sucesso.\n");
-            atualizarSaldo(); // Atualizar o saldo no arquivo
-            dinheiro();
-            break;
+    if (deposito <= 0) {
+        printf("Valor inválido para depósito.\n");
+        return;
+    }
+
+    din.deposito = deposito;
+    cad.saldo += din.deposito;
+    printf("Depósito realizado com sucesso.\n");
+}
+
+void realizarSaque() {
+    printf("Digite o valor do saque: ");
+    float saque;
+    scanf("%f", &saque);
+    getchar();
+
+    if (saque <= 0) {
+        printf("Valor inválido para saque.\n");
+        return;
+    }
+
+    if (saque > cad.saldo) {
+        printf("Saldo insuficiente.\n");
+        return;
+    }
+
+    din.saque = saque;
+    cad.saldo -= din.saque;
+    printf("Saque realizado com sucesso.\n");
+
+    FILE *arquivo = fopen("historico.txt", "a");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    fprintf(arquivo, "Saque: %.2f\n", din.saque);
+
+    fclose(arquivo);
+}
+
+void verSaldo() {
+    printf("Saldo atual: R$%.2f\n", cad.saldo);
+}
+
+void exibirHistoricoSaque() {
+    FILE *arquivo = fopen("historico.txt", "r");
+    if (arquivo == NULL) {
+        printf("Nenhum saque realizado.\n");
+        return;
+    }
+
+    printf("=== Histórico de Saques ===\n");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), arquivo) != NULL) {
+        printf("%s", linha);
+    }
+
+    fclose(arquivo);
+}
+
+void operacoesFinanceiras() {
+    int opcao;
+
+    while (true) {
+        printf("Menu\n");
+        printf("1 - Realizar depósito\n");
+        printf("2 - Realizar saque\n");
+        printf("3 - Ver saldo\n");
+        printf("4 - Histórico de saques\n");
+        printf("5 - Logout\n");
+        printf("\nOpção: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1:
+                realizarDeposito();
+                break;
+
+            case 2:
+                realizarSaque();
+                break;
+
+            case 3:
+                verSaldo();
+                break;
+
+            case 4:
+                exibirHistoricoSaque();
+                break;
+
+            case 5:
+                salvarCadastro(); // Salvar cadastro antes de fazer logout
+                return; // Logout
+
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+                break;
         }
-
-        case 2: {
-            printf("Digite o valor do saque: ");
-            float saque;
-            scanf("%f", &saque);
-            getchar();
-            din.sacar = saque;
-            if (din.sacar > cad.saldo) {
-                printf("Saldo insuficiente.\n");
-            } else {
-                cad.saldo -= din.sacar;
-                printf("Saque realizado com sucesso.\n");
-                atualizarSaldo(); // Atualizar o saldo no arquivo
-            }
-            dinheiro();
-            break;
-        }
-
-        case 3:
-            printf("Saldo atual: R$%.2f\n", cad.saldo);
-            dinheiro();
-            break;
-
-        case 4:
-            return; // Logout, não é necessário chamar salvarCadastro() aqui
-
-        default:
-            printf("Opção inválida. Tente novamente.\n");
-            dinheiro();
-            break;
     }
 }
 
@@ -196,10 +240,9 @@ int main() {
                 break;
 
             case 2:
-                lerCadastro();
                 if (verificarLogin()) {
                     printf("Login realizado com sucesso.\n");
-                    dinheiro();
+                    operacoesFinanceiras();
                 } else {
                     printf("E-mail ou senha inválidos.\n");
                 }
