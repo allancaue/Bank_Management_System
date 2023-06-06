@@ -74,7 +74,7 @@ void cadastro() {
     printf("Digite seu E-mail: ");
     fgets(cad.email, sizeof(cad.email), stdin);
 
-    printf("Digite sua senha (até 10 caracteres): ");
+    printf("Digite sua senha (atÃ© 10 caracteres): ");
     fgets(cad.senha, sizeof(cad.senha), stdin);
 
     printf("Digite sua idade: ");
@@ -82,7 +82,7 @@ void cadastro() {
     getchar();
 
     if (cad.idade < 18) {
-        printf("Você precisa ser maior de idade para se cadastrar.\n");
+        printf("VocÃª precisa ser maior de idade para se cadastrar.\n");
         return;
     }
 
@@ -110,33 +110,33 @@ bool verificarLogin() {
     fgets(senha, sizeof(senha), stdin);
 
     if (strcmp(email, cad.email) == 0 && strcmp(senha, cad.senha) == 0) {
-        return true; // Login válido
+        return true; // Login vÃ¡lido
     }
 
-    return false; // Login inválido
+    return false; // Login invÃ¡lido
 }
 
 void dinheiro() {
     int opcao;
 
     printf("Menu\n");
-    printf("1 - Realizar depósito\n");
+    printf("1 - Realizar depÃ³sito\n");
     printf("2 - Realizar saque\n");
     printf("3 - Ver saldo\n");
     printf("4 - Logout\n");
-    printf("\nOpção: ");
+    printf("\nOpÃ§Ã£o: ");
     scanf("%d", &opcao);
     getchar();
 
     switch (opcao) {
         case 1: {
-            printf("Digite o valor do depósito: ");
+            printf("Digite o valor do depÃ³sito: ");
             float deposito;
             scanf("%f", &deposito);
             getchar();
             din.deposito = deposito;
             cad.saldo += din.deposito;
-            printf("Depósito realizado com sucesso.\n");
+            printf("DepÃ³sito realizado com sucesso.\n");
             atualizarSaldo(); // Atualizar o saldo no arquivo
             dinheiro();
             break;
@@ -165,10 +165,10 @@ void dinheiro() {
             break;
 
         case 4:
-            return; // Logout, não é necessário chamar salvarCadastro() aqui
+            return; // Logout, nÃ£o Ã© necessÃ¡rio chamar salvarCadastro() aqui
 
         default:
-            printf("Opção inválida. Tente novamente.\n");
+            printf("OpÃ§Ã£o invÃ¡lida. Tente novamente.\n");
             dinheiro();
             break;
     }
@@ -186,7 +186,7 @@ int main() {
         printf("1 - Cadastro\n");
         printf("2 - Login\n");
         printf("3 - Sair\n");
-        printf("\nOpção: ");
+        printf("\nOpÃ§Ã£o: ");
         scanf("%d", &opcao);
         getchar();
 
@@ -196,11 +196,12 @@ int main() {
                 break;
 
             case 2:
+                lerCadastro();
                 if (verificarLogin()) {
                     printf("Login realizado com sucesso.\n");
                     dinheiro();
                 } else {
-                    printf("E-mail ou senha inválidos.\n");
+                    printf("E-mail ou senha invÃ¡lidos.\n");
                 }
                 break;
 
@@ -209,7 +210,7 @@ int main() {
                 return 0; // Encerrar o programa
 
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("OpÃ§Ã£o invÃ¡lida. Tente novamente.\n");
                 break;
         }
     }
